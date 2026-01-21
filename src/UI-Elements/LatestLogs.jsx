@@ -3,7 +3,7 @@ import { NavLink } from "react-router";
 import HistoryCell from "./HistoryCell.jsx";
 export default function LatestLogs({ history }) {
   return (
-    <div className="latest-logs p-4 mt-5  bg-white border-2 border-gray-200 dark:bg-glass dark:border-0 shadow-2xs rounded-2xl ">
+    <div className="latest-logs p-4 mt-5 glass border-2 border-gray-200  bg-gray-50 dark:border-0 shadow-2xs rounded-2xl ">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl text-bold">Latest Activity</h1>
         <NavLink to={"/history"}>See All</NavLink>

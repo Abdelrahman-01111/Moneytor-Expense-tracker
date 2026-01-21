@@ -13,20 +13,6 @@
 }
 @custom-variant dark (&:where(.dark, .dark *));
 
-@layer utilities {
-  .bg-glass {
-    background-color: transparent;
-    background: linear-gradient(
-      rgba(255, 255, 255, 0.1),
-      rgba(255, 255, 255, 0.06)
-    );
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-  }
-}
-
 body {
   background: #ffffff;
   color: #000000;
@@ -46,14 +32,13 @@ main {
 .main-info {
   position: relative;
   padding: 10px;
-  border-radius: 0px 0 20px 20px;
+
   display: grid;
   text-align: center;
   justify-content: center;
   align-content: center;
   position: relative;
   overflow: hidden;
-  border: 2px solid rgba(19, 2, 29, 0.1);
 
   p {
     font-size: 20px;
@@ -185,6 +170,17 @@ main {
   width: 100%;
 }
 
+/* ALTERNATIVE: Use this for smooth animations */
+.dark .glass {
+  background-color: transparent !important;
+  /* A flat color animates perfectly from bg-white */
+  background-image: linear-gradient(
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.05)
+  ) !important;
+  backdrop-filter: blur(40px) !important;
+  border: 2px solid rgba(255, 255, 255, 0.18) !important;
+}
 .effect:before {
   content: "";
   position: absolute;

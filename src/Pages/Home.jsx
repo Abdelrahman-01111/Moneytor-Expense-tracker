@@ -18,6 +18,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import LatestLogs from "../UI-Elements/LatestLogs";
 
 import Graph from "../UI-Elements/Graph";
+import Topbar from "../UI-Elements/Topbar";
 function Home({ history, setHistory, showAddModal, setShowAddModal }) {
   const [active, setActive] = useState(""); // can be "add" or "spend" or "" , drilled down to Payment component
   const [money, setMoney] = useState(0);
@@ -78,13 +79,8 @@ function Home({ history, setHistory, showAddModal, setShowAddModal }) {
   // add mounted class to trigger animation after mount
 
   return (
-    <main className="md:p-0 bg-slate-200 dark:bg-midnight">
-      {active ? (
-        <span className="absolute w-full h-full left-0 top-0  bg-black opacity-35 z-2"></span>
-      ) : (
-        ""
-      )}
-
+    <main className="p-2 bg-white dark:bg-midnight">
+      <Topbar />
       <BalanceInfo money={money} />
       {/* <div className=" flex flex-wrap items-center justify-center gap-3 mt-5 lg:mt-30">
         <div className="add cursor-pointer bg-violet-600 active:bg-violet-500" onClick={
@@ -96,24 +92,29 @@ function Home({ history, setHistory, showAddModal, setShowAddModal }) {
         {/* <div className="cursor-pointer"><span className='material-symbols-outlined'>more_vert</span></div>
         <div className="w-full text-center mt-3 py-[15px] px-[20px] rounded-3xl bg-gradient-to-l from-violet-800 to-violet-600 cursor-pointer" >AI Expense Summary</div> */}
       {/*</div> */}
-      <Graph
-        data={history
-          .slice(history.length - 10)
-          .reverse()
-          .map((item, index) => ({ name: item.date, uv: item.currentBalance }))}
-      />
-      <LatestLogs history={history} />
-      {active ? (
-        <Payment
-          active={active}
-          setActive={setActive}
-          setMoney={setMoney}
-          money={money}
-          setHistory={setHistory}
+      <div className="">
+        <Graph
+          data={history
+            .slice(history.length - 10)
+            .reverse()
+            .map((item, index) => ({
+              name: item.date,
+              uv: item.money,
+            }))}
         />
-      ) : (
-        ""
-      )}
+        <LatestLogs history={history} />
+        {active ? (
+          <Payment
+            active={active}
+            setActive={setActive}
+            setMoney={setMoney}
+            money={money}
+            setHistory={setHistory}
+          />
+        ) : (
+          ""
+        )}
+      </div>
     </main>
   );
 }

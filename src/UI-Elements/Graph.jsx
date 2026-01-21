@@ -14,7 +14,7 @@ export default function Graph({ data }) {
   const gridColor = theme === "dark" ? "#ccc" : "#ddd";
 
   return (
-    <div className="w-full bg-white dark:bg-slate-900 border-2 border-gray-200 dark:border-0 shadow-2xs rounded-2xl mt-5 p-3 min-w-0">
+    <div className="w-full glass border-2 border-gray-200 dark:border-0 shadow-2xs rounded-2xl mt-5 p-3 min-w-0">
       <ResponsiveContainer width="100%" height={200}>
         <LineChart data={data}>
           <CartesianGrid
@@ -24,7 +24,6 @@ export default function Graph({ data }) {
             vertical={false}
           />
           <XAxis dataKey="name" stroke={strokeColor} tick={{ fontSize: 12 }} />
-          <YAxis stroke={strokeColor} tick={{ fontSize: 12 }} />
 
           <Line
             type="monotone"

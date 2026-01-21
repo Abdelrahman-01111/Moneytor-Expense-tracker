@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import "./index.css";
 import { SignInContext, HistoryContext, ThemeContext } from "./Contexts.jsx";
 import { useState, useEffect } from "react";
+import Dashboard from "./Dashboard.jsx";
 
 export default function App() {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -36,19 +37,22 @@ export default function App() {
           }}
         >
           <Routes>
-            <Route
-              path="/"
-              element={
-                <Home history={historyData} setHistory={setHistoryData} />
-              }
-            />
-            <Route
-              path="/history"
-              element={<History history={historyData} />}
-            />
+            <Route path="/" element={<Dashboard />}>
+              <Route
+                index
+                element={
+                  <Home history={historyData} setHistory={setHistoryData} />
+                }
+              />
+              <Route
+                path="/history"
+                element={<History history={historyData} />}
+              />
+              <Route path="/settings" element={<Settings />}></Route>
+            </Route>
+
             <Route path="/auth" element={<Auth />}></Route>
             <Route path="/signup" element={<SignUp />}></Route>
-            <Route path="/settings" element={<Settings />}></Route>
           </Routes>
         </SignInContext.Provider>
       </ThemeContext.Provider>
