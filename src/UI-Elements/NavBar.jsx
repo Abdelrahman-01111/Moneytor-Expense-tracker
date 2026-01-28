@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink } from "react-router";
-
+import { motion } from "motion/react";
 const navItems = [
   { name: "Home", icon: "home", to: "/" },
   { name: "History", icon: "history", to: "/history" },
@@ -11,14 +11,12 @@ export default function NavBar() {
   const [collapsed, setCollapsed] = useState(false);
   return (
     <nav
-      className={`bottom-0 bg-midnight-700 w-full h-20 md:h-full ${
-        collapsed ? "md:w-auto" : "md:w-1/5"
-      } fixed bottom-0 md:static shadow-2xs border-2 border-gray-200 dark:border-0 rounded-2xl md:rounded-none flex flex-row md:flex-col items-center md:items-start justify-between md:justify-start p-2 md:p-4 transition-all`}
+      className={`bottom-0 left-0 dark:bg-midnight-700 w-full md:w-fit md:h-full fixed md:static shadow-2xs border-2 border-gray-200 dark:border-0 md:rounded-none flex flex-row md:flex-col items-center md:items-start justify-between md:justify-start p-2 md:p-4 transition-all`}
     >
       {/* Collapse toggle - desktop only */}
       <button
         onClick={() => setCollapsed((s) => !s)}
-        className="hidden md:flex items-center justify-center w-8 h-8 mb-4 ml-2 rounded-md bg-white/10 text-white hover:bg-white/20 transition"
+        className="hidden md:flex items-center justify-center w-8 h-8 mb-4 ml-2 rounded-md bg-white/10 dark:text-white hover:bg-white/20 transition"
         aria-label="Toggle sidebar"
       >
         {collapsed ? "›" : "‹"}
@@ -31,7 +29,7 @@ export default function NavBar() {
             to={item.to}
             className={({ isActive }) => {
               const base =
-                "flex flex-col md:flex-row justify-start p-2 w-full items-center text-lg rounded-xl transition";
+                "flex flex-col md:flex-row md:gap-5 md:px-5 justify-start p-2 w-full items-center text-lg rounded-xl transition";
               const themeText = "text-gray-700 dark:text-white";
               const hover = "hover:text-violet-600 dark:hover:text-violet-400";
               const active = isActive
@@ -40,7 +38,7 @@ export default function NavBar() {
               return `${base} ${themeText} ${hover} ${active}`;
             }}
           >
-            <span className="text-2xl material-symbols-outlined m-2  ">
+            <span className="text-2xl material-symbols-outlined ">
               {item.icon}
             </span>
             <span

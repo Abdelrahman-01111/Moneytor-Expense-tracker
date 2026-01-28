@@ -19,6 +19,7 @@ import LatestLogs from "../UI-Elements/LatestLogs";
 
 import Graph from "../UI-Elements/Graph";
 import Topbar from "../UI-Elements/Topbar";
+import AddBtn from "../UI-Elements/AddBtn";
 function Home({ history, setHistory, showAddModal, setShowAddModal }) {
   const [active, setActive] = useState(""); // can be "add" or "spend" or "" , drilled down to Payment component
   const [money, setMoney] = useState(0);
@@ -102,18 +103,16 @@ function Home({ history, setHistory, showAddModal, setShowAddModal }) {
               uv: item.money,
             }))}
         />
+
+        <AddBtn onClick={() => setActive("add")} />
         <LatestLogs history={history} />
-        {active ? (
-          <Payment
-            active={active}
-            setActive={setActive}
-            setMoney={setMoney}
-            money={money}
-            setHistory={setHistory}
-          />
-        ) : (
-          ""
-        )}
+        <Payment
+          active={active}
+          setActive={setActive}
+          setMoney={setMoney}
+          money={money}
+          setHistory={setHistory}
+        />
       </div>
     </main>
   );

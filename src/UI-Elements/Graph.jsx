@@ -4,7 +4,6 @@ import {
   ResponsiveContainer,
   CartesianGrid,
   XAxis,
-  YAxis,
 } from "recharts";
 import { useContext } from "react";
 import { ThemeContext } from "../Contexts";
