@@ -8,6 +8,7 @@ import "./index.css";
 import { SignInContext, HistoryContext, ThemeContext } from "./Contexts.jsx";
 import { useState, useEffect } from "react";
 import Dashboard from "./Dashboard.jsx";
+import RequireAuth from "./RequireAuth.jsx";
 
 export default function App() {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -37,7 +38,15 @@ export default function App() {
           }}
         >
           <Routes>
-            <Route path="/" element={<Dashboard />}>
+            <Route
+              path="/"
+              element={
+                <RequireAuth>
+                  {" "}
+                  <Dashboard />
+                </RequireAuth>
+              }
+            >
               <Route
                 index
                 element={

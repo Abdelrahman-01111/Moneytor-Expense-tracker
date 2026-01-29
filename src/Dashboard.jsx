@@ -6,7 +6,7 @@ export default function Dashboard() {
   const [data, setData] = useState([]);
 
   return (
-    <div className="dashboard flex flex-col md:flex-row-reverse max-h-screen overflow-hidden h-screen ">
+    <div className="dashboard flex flex-col md:flex-row-reverse max-h-screen overflow-hidden h-[100svh]">
       <main className="dashboard-content flex-1">
         <div className="dashboard-grid max-h-screen overflow-y-scroll transition-all">
           <Outlet />
