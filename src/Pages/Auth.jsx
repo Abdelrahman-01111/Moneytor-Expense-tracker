@@ -36,7 +36,7 @@ export default function Auth() {
   return loading ? (
     <span className="loader"></span>
   ) : (
-    <div className="flex flex-col md:flex-row-reverse w-full h-screen overflow-hidden ">
+    <div className="flex flex-col md:flex-row-reverse w-full h-[100svh] overflow-hidden ">
       {/* Illustration */}
       <div className="text-center p-10  flex flex-col justify-center align-center text-white md:w-1/2 w-full h-1/2 md:h-full effect relative">
         <h1 className="text-4xl mb-10 justify-self-start">Moneytor</h1>
@@ -46,7 +46,7 @@ export default function Auth() {
       {/* Form area */}
 
       <div className="bg-midnight-950 flex flex-col justify-center align-center rounded-t-3xl md:rounded-none h-1/2 md:h-screen w-full md:w-1/2 p-8">
-        <h1 className="text-2xl mb-5 text-center">Login</h1>
+        <h1 className="text-2xl mb-5 text-center">Welcome Back!</h1>
 
         <form
           className="flex flex-col"
