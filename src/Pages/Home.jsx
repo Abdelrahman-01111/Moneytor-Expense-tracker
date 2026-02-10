@@ -12,7 +12,7 @@ import {
   orderBy,
   onSnapshot,
 } from "firebase/firestore";
-import { SignInContext } from "../Contexts";
+import { HistoryContext } from "../Contexts";
 import { db, Auth } from "/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import LatestLogs from "../UI-Elements/LatestLogs";
@@ -20,11 +20,11 @@ import LatestLogs from "../UI-Elements/LatestLogs";
 import Graph from "../UI-Elements/Graph";
 import Topbar from "../UI-Elements/Topbar";
 import AddBtn from "../UI-Elements/AddBtn";
-function Home({ history, setHistory, showAddModal, setShowAddModal }) {
+function Home() {
   const [active, setActive] = useState(""); // can be "add" or "spend" or "" , drilled down to Payment component
   const [money, setMoney] = useState(0);
-  const { isSignedIn, setIsSignedIn } = useContext(SignInContext);
-
+  const [scrolling, setScrolling] = useState(false);
+  const { history, setHistory } = useContext(HistoryContext);
   const navigate = useNavigate();
 
   async function getUserInfo() {
@@ -80,19 +80,10 @@ function Home({ history, setHistory, showAddModal, setShowAddModal }) {
   // add mounted class to trigger animation after mount
 
   return (
-    <main className="p-2 bg-white dark:bg-midnight">
+    <main className="p-2 bg-white overflow-y-scroll dark:bg-midnight">
       <Topbar />
       <BalanceInfo money={money} />
-      {/* <div className=" flex flex-wrap items-center justify-center gap-3 mt-5 lg:mt-30">
-        <div className="add cursor-pointer bg-violet-600 active:bg-violet-500" onClick={
-          () => { setActive("add") }
-        } >Add Money</div>
-        <div className="pay cursor-pointer bg-rose-600 active:bg-rose-500" onClick={
-          () => { setActive("spend") }
-        } >Spend Money</div>
-        {/* <div className="cursor-pointer"><span className='material-symbols-outlined'>more_vert</span></div>
-        <div className="w-full text-center mt-3 py-[15px] px-[20px] rounded-3xl bg-gradient-to-l from-violet-800 to-violet-600 cursor-pointer" >AI Expense Summary</div> */}
-      {/*</div> */}
+
       <div className="">
         <Graph
           data={history
@@ -104,7 +95,7 @@ function Home({ history, setHistory, showAddModal, setShowAddModal }) {
             }))}
         />
 
-        <AddBtn onClick={() => setActive("add")} />
+        <AddBtn onClick={() => setActive("add")} scrolling={scrolling} />
         <LatestLogs history={history} />
         <Payment
           active={active}
