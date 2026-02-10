@@ -11,6 +11,7 @@ const auth = getAuth();
 import { useContext, useEffect, useState } from "react";
 import { SignInContext } from "../Contexts";
 import ErrorMsg from "../UI-Elements/ErrorMsg";
+import { div } from "motion/react-client";
 export default function SignUp() {
   const navigate = useNavigate();
   const { isSignedIn, setIsSignedIn, setUserID } = useContext(SignInContext);
@@ -28,7 +29,9 @@ export default function SignUp() {
     };
   }, []);
   return loading ? (
-    <span class="loader"></span>
+    <div className="flex items-center justify-center h-screen">
+      <span className="loader"></span>
+    </div>
   ) : (
     <div className="">
       <div className="flex flex-col  md:flex-row-reverse w-full overflow-hidden h-screen">
@@ -94,7 +97,7 @@ export default function SignUp() {
               name="password"
               placeholder="Password"
               autoComplete="on"
-              className="mb-3 p-3 rounded-xl bg-midnight border-2 border-midnight-700 focus:border-gray-300 outline-none"
+              className="mb-5 p-3 rounded-xl bg-midnight border-2 border-midnight-700 focus:border-gray-300 outline-none"
             />
             {err && <ErrorMsg code={err} onClose={() => setErr("")} />}
             <button

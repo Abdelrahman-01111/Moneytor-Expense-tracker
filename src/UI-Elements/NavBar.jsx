@@ -11,7 +11,7 @@ export default function NavBar() {
   const [collapsed, setCollapsed] = useState(false);
   return (
     <nav
-      className={`bottom-0 left-0 dark:bg-midnight-700 w-full md:w-fit md:h-full fixed md:static shadow-2xs border-2 border-gray-200 dark:border-0 md:rounded-none flex flex-row md:flex-col items-center md:items-start justify-between md:justify-start p-2 md:p-4 transition-all`}
+      className={`bottom-0 left-0 bg-white dark:bg-midnight-700 w-full md:w-fit md:h-full fixed md:static shadow-2xs border-2 border-gray-200 dark:border-0 md:rounded-none flex flex-row md:flex-col items-center md:items-start justify-between md:justify-start p-2 md:p-4 transition-all`}
     >
       {/* Collapse toggle - desktop only */}
       <button

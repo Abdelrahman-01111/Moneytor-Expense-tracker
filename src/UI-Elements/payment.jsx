@@ -1,5 +1,5 @@
 import { collection, addDoc, setDoc, doc } from "firebase/firestore";
-import { useContext, useState } from "react";
+import { useContext, useState, useRef } from "react";
 import { db } from "/firebase";
 import { Auth } from "../../firebase";
 import { SignInContext } from "../Contexts";
@@ -24,6 +24,8 @@ export default function Payment({
 }) {
   const [amount, setAmount] = useState(0);
   const [object, setObject] = useState("");
+  const [type, setType] = useState(active === "spend" ? "expense" : "income");
+  const objectRef = useRef(null);
 
   return (
     <AnimatePresence>
@@ -43,7 +45,7 @@ export default function Payment({
             animate={{ y: 0 }}
             exit={{ y: 500 }}
             className={
-              "z-150 fixed bg-white dark:bg-midnight-950 rounded-t-3xl left-0 md:left-1/2 md:translate-x-[-50%] bottom-0 w-full md:w-2/3 h-100 p-5 shadow-lg dark:shadow-none border-t border-gray-200 dark:border-midnight-700 "
+              "z-150 fixed bg-white dark:bg-midnight-950 rounded-t-3xl left-0 md:left-1/2 md:translate-x-[-50%] bottom-0 w-full md:w-2/3   p-5 shadow-lg dark:shadow-none border-t border-gray-200 dark:border-midnight-700 "
             }
           >
             <div
@@ -55,8 +57,46 @@ export default function Payment({
               <span className="material-symbols-outlined ">close</span>
             </div>
             <h1 className="text-center m-10 text-2xl">
-              {active == "spend" ? "Spend" : "Add"} Money
+              {type === "expense" ? "Spend" : "Add"} Money
             </h1>
+            <div className="mb-4 flex flex-col items-center">
+              <div className="flex items-center gap-2 bg-gray-100 dark:bg-midnight p-1 rounded-full">
+                <button
+                  aria-pressed={type === "income"}
+                  onClick={() => {
+                    setType("income");
+                    setActive("add");
+                  }}
+                  className={`px-4 py-2 rounded-full transition-all text-sm flex items-center gap-2 ${
+                    type === "income"
+                      ? "bg-violet-600 text-white shadow"
+                      : "text-gray-600 dark:text-gray-300"
+                  }`}
+                >
+                  <span className="material-symbols-outlined">
+                    arrow_downward
+                  </span>
+                  Income
+                </button>
+                <button
+                  aria-pressed={type === "expense"}
+                  onClick={() => {
+                    setType("expense");
+                    setActive("spend");
+                  }}
+                  className={`px-4 py-2 rounded-full transition-all text-sm flex items-center gap-2 ${
+                    type === "expense"
+                      ? "bg-violet-600 text-white shadow"
+                      : "text-gray-600 dark:text-gray-300"
+                  }`}
+                >
+                  <span className="material-symbols-outlined">
+                    arrow_upward
+                  </span>
+                  Expense
+                </button>
+              </div>
+            </div>
             <div>
               <input
                 className="outline-none border-2 border-gray-300 dark:border-midnight-700 focus:border-gray-500 dark:focus:border-gray-300 p-3 rounded-xl w-full mb-5 bg-white dark:bg-midnight"
@@ -81,19 +121,58 @@ export default function Payment({
                     e.currentTarget.nextElementSibling.click();
                   }
                 }}
+                ref={objectRef}
                 onChange={(e) => {
                   setObject(e.currentTarget.value);
                 }}
               />
+              <div className="mb-6 flex justify-center">
+                <button
+                  aria-label="Use microphone to fill object"
+                  className="w-14 h-14 rounded-full bg-gradient-to-b from-violet-500 to-violet-700 text-white flex items-center justify-center shadow-xl hover:scale-105 transition-transform"
+                  onClick={async () => {
+                    navigator.vibrate?.(50);
+                    try {
+                      const SpeechRecognition =
+                        window.SpeechRecognition ||
+                        window.webkitSpeechRecognition;
+                      if (!SpeechRecognition) {
+                        objectRef.current?.focus();
+                        return;
+                      }
+                      const recog = new SpeechRecognition();
+                      recog.lang = "en-US";
+                      recog.interimResults = false;
+                      recog.maxAlternatives = 1;
+                      recog.start();
+                      recog.onresult = (ev) => {
+                        const transcript = ev.results[0][0].transcript;
+                        setObject(transcript);
+                        if (objectRef.current)
+                          objectRef.current.value = transcript;
+                      };
+                      recog.onerror = () => {
+                        if (objectRef.current) objectRef.current.focus();
+                      };
+                    } catch (e) {
+                      if (objectRef.current) objectRef.current.focus();
+                    }
+                  }}
+                >
+                  <span className="material-symbols-outlined text-3xl">
+                    mic
+                  </span>
+                </button>
+              </div>
               <button
                 className="bg-violet-600 hover:scale-101 transition-all text-white w-full p-3 rounded-xl cursor-pointer"
                 onClick={(e) => {
                   navigator.vibrate(200);
                   if (amount && object) {
-                    handleTransaction(active, amount, object);
-                    if (active == "spend") {
+                    const transType = type === "expense" ? "spend" : "add";
+                    handleTransaction(transType, amount, object);
+                    if (transType === "spend") {
                       setMoney((prev) => prev - amount);
-
                       setDoc(doc(db, "Users", Auth.currentUser.uid), {
                         balance: money - Number(amount),
                       });
@@ -107,7 +186,7 @@ export default function Payment({
                       ...prevHistory,
                       {
                         id: Date.now(),
-                        type: active,
+                        type: transType,
                         money: amount,
                         object: object,
                         date:
@@ -119,7 +198,7 @@ export default function Payment({
                     ]);
                     localStorage.setItem(
                       "balance",
-                      active == "spend"
+                      transType == "spend"
                         ? money - amount
                         : money + Number(amount),
                     );
