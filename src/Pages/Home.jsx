@@ -18,12 +18,12 @@ import { onAuthStateChanged } from "firebase/auth";
 import LatestLogs from "../UI-Elements/LatestLogs";
 
 import Graph from "../UI-Elements/Graph";
-import Topbar from "../UI-Elements/Topbar";
+
 import AddBtn from "../UI-Elements/AddBtn";
 function Home() {
   const [active, setActive] = useState(""); // can be "add" or "spend" or "" , drilled down to Payment component
   const [money, setMoney] = useState(0);
-  const [scrolling, setScrolling] = useState(false);
+
   const { history, setHistory } = useContext(HistoryContext);
   const navigate = useNavigate();
 
@@ -80,22 +80,21 @@ function Home() {
   // add mounted class to trigger animation after mount
 
   return (
-    <main className="p-2 bg-white overflow-y-scroll dark:bg-midnight">
-      <Topbar />
+    <main className="bg-white dark:bg-midnight-950 min-h-full">
       <BalanceInfo money={money} />
 
-      <div className="">
+      <div className="p-2">
         <Graph
           data={history
             .slice(history.length - 10)
             .reverse()
-            .map((item, index) => ({
+            .map((item) => ({
               name: item.date,
               uv: item.money,
             }))}
         />
 
-        <AddBtn onClick={() => setActive("add")} scrolling={scrolling} />
+        <AddBtn onClick={() => setActive("add")} />
         <LatestLogs history={history} />
         <Payment
           active={active}

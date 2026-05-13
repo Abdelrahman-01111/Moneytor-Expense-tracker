@@ -13,28 +13,35 @@ export default function Graph({ data }) {
   const gridColor = theme === "dark" ? "#ccc" : "#ddd";
 
   return (
-    <div className="w-full glass border-2 border-gray-200 dark:border-0 shadow-2xs rounded-2xl mt-5 p-3 min-w-0">
-      <ResponsiveContainer width="100%" height={200}>
-        <LineChart data={data}>
-          <CartesianGrid
-            stroke={gridColor}
-            strokeOpacity={0.2}
-            horizontal
-            vertical={false}
-          />
-          <XAxis dataKey="name" stroke={strokeColor} tick={{ fontSize: 12 }} />
+    <div className="p-1 mt-7">
+      <h1 className="text-3xl font-bold ">Overview</h1>
+      <div className="w-full bg-[#f3f3f3] dark:bg-[#212121] border-2 border-gray-200 dark:border-0 shadow-2xs rounded-2xl mt-3 p-4 min-w-0">
+        <ResponsiveContainer width="100%" height={200}>
+          <LineChart data={data}>
+            <CartesianGrid
+              stroke={gridColor}
+              strokeOpacity={0.2}
+              horizontal
+              vertical={false}
+            />
+            <XAxis
+              dataKey="name"
+              stroke={strokeColor}
+              tick={{ fontSize: 12 }}
+            />
 
-          <Line
-            type="monotone"
-            dataKey="uv"
-            stroke={strokeColor}
-            strokeOpacity={1}
-            strokeWidth={3}
-            dot={{ r: 1 }}
-            activeDot={{ r: 1 }}
-          />
-        </LineChart>
-      </ResponsiveContainer>
+            <Line
+              type="monotone"
+              dataKey="uv"
+              stroke={strokeColor}
+              strokeOpacity={1}
+              strokeWidth={3}
+              dot={{ r: 1 }}
+              activeDot={{ r: 1 }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }

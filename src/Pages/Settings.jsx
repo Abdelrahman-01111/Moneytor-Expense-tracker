@@ -8,16 +8,28 @@ export default function Settings() {
   const { setIsSignedIn } = useContext(SignInContext);
   const { theme, setTheme } = useContext(ThemeContext);
   return (
-    <div className="p-4">
-      <h1 className="text-2xl text-bold mb-6 ">Settings</h1>
+    <div className="p-4 min-h-full bg-white dark:bg-midnight-950 ">
+      <h1 className="text-3xl font-semibold mb-6 text-center mt-6">Settings</h1>
       <button
-        className="bg-blue-500 text-white rounded-md p-2 mr-4"
+        className="bg-gray-800 dark:bg-gray-200 text-white dark:text-black rounded-md w-full p-3 mr-4 flex items-center justify-center"
         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
       >
-        Toggle to {theme === "dark" ? "Light" : "Dark"} Mode
+        <div className="flex items-center gap-2">
+          {theme === "dark" ? (
+            <>
+              <span className="material-symbols-outlined">light_mode</span>
+              <p className="text-md">light</p>
+            </>
+          ) : (
+            <>
+              <span className="material-symbols-outlined">dark_mode</span>
+              <p className="text-md">dark</p>
+            </>
+          )}
+        </div>
       </button>
       <button
-        className="bg-red-500 text-white rounded-md p-2 "
+        className="bg-red-500 w-full mt-4 text-white rounded-md p-2 "
         onClick={() => {
           signOut(Auth).then(() => {
             setIsSignedIn(false);

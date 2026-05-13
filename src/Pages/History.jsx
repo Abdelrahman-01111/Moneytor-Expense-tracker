@@ -1,7 +1,7 @@
 import HistoryCell from "../UI-Elements/HistoryCell";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router";
-import { collection, getDocs, query, orderBy, doc } from "firebase/firestore";
+import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db, Auth } from "/firebase"; // Adjust the import based on your firebase configuration
 import { SignInContext, HistoryContext } from "../Contexts";
 import { onAuthStateChanged } from "firebase/auth";
@@ -13,11 +13,7 @@ const handleData = async () => {
   return await getDocs(q);
 };
 const History = () => {
-  const { history } = useContext(HistoryContext);
-  const [mounted, setMounted] = useState(false);
-  const [unmounting, setUnmounting] = useState(false);
-
-  const { isSignedIn } = useContext(SignInContext);
+  const { history, setHistory } = useContext(HistoryContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,11 +34,11 @@ const History = () => {
         }
       }
     });
-  }, []);
+  }, [history.length]);
 
   return (
-    <div className="bg-white dark:bg-midnight min-h-screen p-3 shadow-lg dark:shadow-none ">
-      <h1 className="p-5 text-center text-2xl">History</h1>
+    <div className="bg-white dark:bg-midnight-950 min-h-screen p-3 shadow-lg dark:shadow-none ">
+      <h1 className="p-5 text-center text-3xl font-semibold">History</h1>
       {history.length > 0 ? (
         history.map((doc) => <HistoryCell key={doc.id} item={doc} />)
       ) : (

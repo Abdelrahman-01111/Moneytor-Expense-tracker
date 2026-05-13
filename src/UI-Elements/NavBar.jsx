@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { NavLink } from "react-router";
-import { motion } from "motion/react";
 const navItems = [
   { name: "Home", icon: "home", to: "/" },
   { name: "History", icon: "history", to: "/history" },
+  { name: "Debts", icon: "payments", to: "/debts" },
   { name: "Settings", icon: "settings", to: "/settings" },
 ];
 
@@ -11,7 +11,7 @@ export default function NavBar() {
   const [collapsed, setCollapsed] = useState(false);
   return (
     <nav
-      className={`bottom-0 left-0 bg-white dark:bg-midnight-700 w-full md:w-fit md:h-full fixed md:static shadow-2xs border-2 border-gray-200 dark:border-0 md:rounded-none flex flex-row md:flex-col items-center md:items-start justify-between md:justify-start p-2 md:p-4 transition-all`}
+      className={`bottom-0 left-0 bg-white/90 dark:bg-midnight w-full md:w-fit md:h-full fixed md:static shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.1)] dark:shadow-none border-t border-gray-200 dark:border-t-0 md:border-r md:border-t-0 md:border-gray-200 dark:border-gray-800 flex flex-row md:flex-col items-center md:items-start justify-between md:justify-start p-2 md:p-4 transition-all z-50`}
     >
       {/* Collapse toggle - desktop only */}
       <button
@@ -22,18 +22,18 @@ export default function NavBar() {
         {collapsed ? "›" : "‹"}
       </button>
 
-      <div className="flex md:flex-col w-full justify-around items-center">
+      <div className="flex md:flex-col w-full justify-evenly items-center">
         {navItems.map((item) => (
           <NavLink
             key={item.name}
             to={item.to}
             className={({ isActive }) => {
               const base =
-                "flex flex-col md:flex-row md:gap-5 md:px-5 justify-start p-2 w-full items-center text-lg rounded-xl transition";
+                "flex flex-col md:flex-row md:gap-5 justify-start p-2 md:p-4 md:mb-5 w-full items-center text-lg rounded-xl transition";
               const themeText = "text-gray-700 dark:text-white";
-              const hover = "hover:text-violet-600 dark:hover:text-violet-400";
+              const hover = "hover:bg-violet-100 hover:dark:bg-violet-900/50";
               const active = isActive
-                ? "bg-violet-100 text-violet-700 dark:bg-violet-900 dark:text-violet-300 font-semibold"
+                ? "bg-main text-white dark:bg-main-dark dark:text-violet-300 font-semibold"
                 : "";
               return `${base} ${themeText} ${hover} ${active}`;
             }}
