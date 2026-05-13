@@ -12,7 +12,8 @@ export default function HistoryCell({ item }) {
       <p className="flex-1">{item.object}</p>
       <h3
         className={
-          (item.type == "add" ? "text-blue-500 " : "text-red-500 ") + "mr-3"
+          (item.type == "add" ? "text-add " : "text-remove ") +
+          "mr-3 font-semibold"
         }
       >
         {item.type === "add" ? "+" : "-"}

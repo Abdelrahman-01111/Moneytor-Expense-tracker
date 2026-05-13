@@ -1,12 +1,10 @@
-import { useState, useEffect } from "react";
-export default function AddBtn({ onClick, scrolling }) {
+export default function AddBtn({ onClick }) {
   return (
     <button
-      id="add-btn"
-      className={`fixed z-99 bottom-25 md:bottom-10 cursor-pointer bg-violet-700 w-17 h-17 rounded-xl flex justify-center items-center shadow-lg text-white right-4 active:bg-violet-600 hover:scale-[1.06] transition-transform ${scrolling ? "opacity-0" : "opacity-100"}`}
-      onClick={onClick}
+      onClick={() => onClick()}
+      className="fixed bottom-24 right-6 md:bottom-8 md:right-8 w-16 h-16 bg-[#5c17e5] hover:bg-violet-800 text-white rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-105 z-40"
     >
-      <span className="material-symbols-outlined">add</span>
+      <span className="material-symbols-outlined text-2xl">add</span>
     </button>
   );
 }

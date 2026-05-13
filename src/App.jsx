@@ -3,6 +3,7 @@ import History from "./Pages/History.jsx";
 import Auth from "./Pages/Auth.jsx";
 import SignUp from "./Pages/SignUp.jsx";
 import Settings from "./Pages/Settings.jsx";
+import DebtList from "./Pages/DebtList.jsx";
 import { BrowserRouter, Routes, Route } from "react-router";
 import "./index.css";
 import { SignInContext, ThemeContext } from "./Contexts.jsx";
@@ -49,6 +50,7 @@ export default function App() {
               <Route index element={<Home />} />
               <Route path="/history" element={<History />} />
               <Route path="/settings" element={<Settings />}></Route>
+              <Route path="/debts" element={<DebtList />} />
             </Route>
 
             <Route path="/auth" element={<Auth />}></Route>
