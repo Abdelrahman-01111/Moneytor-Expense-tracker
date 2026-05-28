@@ -1,6 +1,6 @@
 import Home from "./Pages/Home.jsx";
 import History from "./Pages/History.jsx";
-import Auth from "./Pages/Auth.jsx";
+import LogIn from "./Pages/LogIn.jsx";
 import SignUp from "./Pages/SignUp.jsx";
 import Settings from "./Pages/Settings.jsx";
 import DebtList from "./Pages/DebtList.jsx";
@@ -53,7 +53,7 @@ export default function App() {
               <Route path="/debts" element={<DebtList />} />
             </Route>
 
-            <Route path="/auth" element={<Auth />}></Route>
+            <Route path="/auth" element={<LogIn />}></Route>
             <Route path="/signup" element={<SignUp />}></Route>
           </Routes>
         </SignInContext.Provider>

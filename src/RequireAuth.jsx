@@ -5,15 +5,22 @@ import { Auth } from "../firebase";
 
 const RequireAuth = ({ children }) => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(1);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    onAuthStateChanged(Auth, (user) => {
-      setLoading(0);
+    // FIX #5: store the unsubscribe function and call it on cleanup.
+    // Without this, the listener keeps running even after the component
+    // unmounts, which causes a memory leak and can trigger navigation
+    // to /auth unexpectedly if the user signs out from another tab.
+    const unsub = onAuthStateChanged(Auth, (user) => {
+      setLoading(false);
       if (!user) {
         navigate("/auth");
       }
     });
+    return () => unsub();
   }, []);
+
   return loading ? <h1>Loading</h1> : children;
 };
 

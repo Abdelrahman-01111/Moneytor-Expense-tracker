@@ -1,0 +1,20 @@
+rules_version = '2';
+
+// These rules ensure each user can ONLY read/write their own data.
+// Without these rules, any logged-in user could access other users' data
+// just by knowing their user ID.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Match any document under /Users/{userId}/...
+    // The {document=**} wildcard means this rule applies to ALL sub-collections
+    // (history, debts, and any future ones)
+    match /Users/{userId}/{document=**} {
+
+      // Only allow access if:
+      // 1. The request is authenticated (request.auth != null)
+      // 2. The authenticated user's UID matches the document's userId path
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
