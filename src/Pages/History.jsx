@@ -1,4 +1,4 @@
-import HistoryCell from "../UI-Elements/HistoryCell";
+import HistoryCell from "../Components/HistoryCell";
 import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";

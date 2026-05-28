@@ -1,37 +1,43 @@
+import { useRef } from "react";
 import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  setPersistence,
   browserLocalPersistence,
+  getAuth,
+  setPersistence,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
-import { useNavigate } from "react-router";
-import { useContext, useState } from "react";
-import { SignInContext } from "../Contexts";
+import { useState, useContext } from "react";
 import { app } from "../../firebase";
+import { useNavigate } from "react-router";
+import { SignInContext } from "../Contexts";
 import Auth from "../Components/Auth";
 import PasswordInput from "../Components/PasswordInput";
 
 const auth = getAuth(app);
 
-/**
- * Client-side password validation.
- * Returns an error code string if the password is too weak, or "" if valid.
- */
-function validatePassword(password) {
-  if (password.length < 8) return "password-too-short";
-  if (!/[A-Z]/.test(password)) return "password-no-uppercase";
-  if (!/[0-9]/.test(password)) return "password-no-number";
-  return "";
-}
+/** Max failed attempts before temporarily locking the form */
+const MAX_ATTEMPTS = 5;
+/** How long (ms) to lock the form after too many failures */
+const LOCKOUT_MS = 30_000;
 
-export default function SignUp() {
+export default function LogIn() {
   const navigate = useNavigate();
-  const { setUserID } = useContext(SignInContext);
+  const { setIsSignedIn } = useContext(SignInContext);
   const [err, setErr] = useState("");
+
+  const [attempts, setAttempts] = useState(0);
+  const [lockedUntil, setLockedUntil] = useState(0);
   const [submitting, setSubmitting] = useState(false);
+  const lockTimerRef = useRef(null);
+
+  const isLocked = Date.now() < lockedUntil;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (isLocked) {
+      setErr("too-many-attempts");
+      return;
+    }
 
     const formData = new FormData(e.currentTarget);
     const email = formData.get("email")?.toString().trim() ?? "";
@@ -42,24 +48,28 @@ export default function SignUp() {
       return;
     }
 
-    const passwordErr = validatePassword(password);
-    if (passwordErr) {
-      setErr(passwordErr);
-      return;
-    }
-
     setSubmitting(true);
     try {
       await setPersistence(auth, browserLocalPersistence);
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password,
-      );
-      setUserID(() => userCredential.user.uid);
+      await signInWithEmailAndPassword(auth, email, password);
+      setIsSignedIn(true);
+      setAttempts(0);
       navigate("/");
     } catch (error) {
+      const newAttempts = attempts + 1;
+      setAttempts(newAttempts);
       setErr(error.code);
+
+      if (newAttempts >= MAX_ATTEMPTS) {
+        const unlockTime = Date.now() + LOCKOUT_MS;
+        setLockedUntil(unlockTime);
+        setErr("too-many-attempts");
+        lockTimerRef.current = setTimeout(() => {
+          setAttempts(0);
+          setLockedUntil(0);
+          setErr("");
+        }, LOCKOUT_MS);
+      }
     } finally {
       setSubmitting(false);
     }
@@ -67,23 +77,23 @@ export default function SignUp() {
 
   return (
     <Auth
-      title="Sign Up"
+      title="Welcome Back!"
       err={err}
       setErr={setErr}
-      linkTo="/auth"
-      linkLabel="Have an account?"
+      linkTo="/signup"
+      linkLabel="Create account"
     >
       <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
         <input
+          type="email"
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();
               e.currentTarget.form?.elements.namedItem("password")?.focus();
             }
           }}
-          type="email"
-          name="email"
           placeholder="Email"
+          name="email"
           autoComplete="on"
           className="auth-input"
         />
@@ -92,10 +102,10 @@ export default function SignUp() {
 
         <button
           type="submit"
-          disabled={submitting}
+          disabled={submitting || isLocked}
           className="bg-white text-black p-3 rounded-xl hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {submitting ? "Creating account…" : "Sign Up"}
+          {submitting ? "Signing in…" : isLocked ? "Try again later" : "Login"}
         </button>
       </form>
     </Auth>

@@ -14,15 +14,20 @@
 }
 @custom-variant dark (&:where(.dark, .dark *));
 
+@layer components {
+  .auth-input {
+    @apply p-3 rounded-xl bg-midnight! border-2 border-midnight-700 focus:border-gray-300 outline-none w-full text-white! placeholder:text-gray-400!;
+  }
+}
+
 body {
-  background: #ffffff;
-  color: #000000;
   font-family: "Google Sans", sans-serif;
-  transtion: all 0.3s ease !important;
+  transition: all 0.3s ease !important;
+
+  color: #141520;
 }
 .dark body {
-  background: #010101;
-  color: white;
+  color: #fffffff8;
 }
 html {
   -webkit-user-select: none; /* Safari */

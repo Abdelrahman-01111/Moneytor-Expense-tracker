@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react";
-import { useNavigate, NavLink } from "react-router";
-import BalanceInfo from "../UI-Elements/balanceInfo";
-import Payment from "../UI-Elements/payment";
+import { NavLink } from "react-router";
+import BalanceInfo from "../Components/balanceInfo";
+import TransactionForm from "../Components/TransactionForm";
 import {
   doc,
   getDoc,
@@ -15,17 +15,16 @@ import {
 import { HistoryContext } from "../Contexts";
 import { db, Auth } from "/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import LatestLogs from "../UI-Elements/LatestLogs";
+import LatestLogs from "../Components/LatestLogs";
 
-import Graph from "../UI-Elements/Graph";
+import Graph from "../Components/Graph";
 
-import AddBtn from "../UI-Elements/AddBtn";
+import AddBtn from "../Components/AddBtn";
 function Home() {
   const [active, setActive] = useState(""); // can be "add" or "spend" or "" , drilled down to Payment component
   const [money, setMoney] = useState(0);
 
   const { history, setHistory } = useContext(HistoryContext);
-  const navigate = useNavigate();
 
   async function getUserInfo() {
     const docSnap = await getDoc(doc(db, "Users", Auth.currentUser.uid));
@@ -56,7 +55,7 @@ function Home() {
   }
 
   useEffect(() => {
-    const unSub = onAuthStateChanged(Auth, (user) => {
+    const unSub = onAuthStateChanged(Auth, () => {
       //same session
       money == 0 && setMoney(Number(localStorage.getItem("balance")) || 0);
       onSnapshot(
@@ -65,12 +64,6 @@ function Home() {
           getUserInfo();
         },
       );
-
-      if (!user) {
-        //not signed in
-
-        navigate("/auth");
-      }
     });
     return () => {
       unSub();
@@ -96,7 +89,7 @@ function Home() {
 
         <AddBtn onClick={() => setActive("add")} />
         <LatestLogs history={history} />
-        <Payment
+        <TransactionForm
           active={active}
           setActive={setActive}
           setMoney={setMoney}

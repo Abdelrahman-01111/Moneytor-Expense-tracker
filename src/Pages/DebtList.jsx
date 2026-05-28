@@ -11,9 +11,8 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { db, Auth } from "../../firebase";
-import AddBtn from "../UI-Elements/AddBtn";
-// eslint-disable-next-line no-unused-vars
-import { AnimatePresence, motion } from "motion/react";
+import AddBtn from "../Components/AddBtn";
+import FullScreenForm from "../Components/FullScreenForm";
 
 export default function DebtList() {
   const { theme } = useContext(ThemeContext);
@@ -201,105 +200,74 @@ export default function DebtList() {
 
       {/* FAB */}
       <AddBtn onClick={() => setShowForm(true)} />
-      {/* Add Debt Modal */}
-      <AnimatePresence>
-        {showForm && (
-          <>
-            <motion.div
-              className="bg-black/30 fixed inset-0 z-40"
-              key="debt-overlay"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setShowForm(false)}
-            />
-            <motion.div
-              key="debt-form"
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className={`fixed rounded-t-3xl left-0 md:left-1/2 md:-translate-x-1/2 bottom-0 w-full md:w-2/3 lg:w-1/2 p-5 sm:p-6 shadow-lg border-t z-50 ${isDark ? "bg-midnight-950 border-gray-700" : "bg-white border-gray-200"}`}
+      {/* Add Debt Form — full screen */}
+      {showForm && (
+        <FullScreenForm
+          title="Add Debt"
+          onClose={() => setShowForm(false)}
+          onConfirm={handleAdd}
+        >
+          {/* Direction Toggle */}
+          <nav className="flex justify-center" aria-label="Debt direction">
+            <div
+              className={`flex items-center gap-1 p-1 rounded-full ${isDark ? "bg-gray-800" : "bg-gray-100"}`}
             >
-              {/* Close button */}
               <button
-                className={`rounded-full w-10 h-10 flex justify-center items-center absolute top-4 left-5 transition-all ${isDark ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
-                onClick={() => setShowForm(false)}
+                type="button"
+                onClick={() => setDirection("owe")}
+                className={`px-3 sm:px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-1.5 ${direction === "owe" ? "bg-red-500 text-white shadow" : isDark ? "text-gray-300" : "text-gray-600"}`}
               >
-                <span className="material-symbols-outlined">close</span>
+                <span className="material-symbols-outlined text-base">
+                  arrow_upward
+                </span>
+                I Owe
               </button>
-
-              <h2 className="text-center text-xl sm:text-2xl font-semibold mt-4 sm:mt-6 mb-5 sm:mb-6">
-                Add Debt
-              </h2>
-
-              {/* Direction Toggle */}
-              <div className="flex justify-center mb-5 sm:mb-6">
-                <div
-                  className={`flex items-center gap-1 p-1 rounded-full ${isDark ? "bg-gray-800" : "bg-gray-100"}`}
-                >
-                  <button
-                    onClick={() => setDirection("owe")}
-                    className={`px-3 sm:px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-1.5 ${direction === "owe" ? "bg-red-500 text-white shadow" : isDark ? "text-gray-300" : "text-gray-600"}`}
-                  >
-                    <span className="material-symbols-outlined text-base">
-                      arrow_upward
-                    </span>
-                    I Owe
-                  </button>
-                  <button
-                    onClick={() => setDirection("owed")}
-                    className={`px-3 sm:px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-1.5 ${direction === "owed" ? "bg-emerald-500 text-white shadow" : isDark ? "text-gray-300" : "text-gray-600"}`}
-                  >
-                    <span className="material-symbols-outlined text-base">
-                      arrow_downward
-                    </span>
-                    Owes Me
-                  </button>
-                </div>
-              </div>
-
-              <input
-                className={`outline-none border-2 p-3 rounded-xl w-full mb-3 sm:mb-4 text-sm sm:text-base transition-colors ${isDark ? "bg-midnight border-midnight-700 focus:border-gray-500" : "bg-white border-gray-300 focus:border-gray-500"}`}
-                type="text"
-                placeholder="Person's name..."
-                value={name}
-                autoFocus
-                onChange={(e) => setName(e.target.value)}
-                onKeyDown={(e) =>
-                  e.key === "Enter" &&
-                  e.currentTarget.nextElementSibling?.focus()
-                }
-              />
-              <input
-                className={`outline-none border-2 p-3 rounded-xl w-full mb-3 sm:mb-4 text-sm sm:text-base transition-colors ${isDark ? "bg-midnight border-midnight-700 focus:border-gray-500" : "bg-white border-gray-300 focus:border-gray-500"}`}
-                type="number"
-                placeholder="Amount..."
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                onKeyDown={(e) =>
-                  e.key === "Enter" &&
-                  e.currentTarget.nextElementSibling?.focus()
-                }
-              />
-              <input
-                className={`outline-none border-2 p-3 rounded-xl w-full mb-5 sm:mb-6 text-sm sm:text-base transition-colors ${isDark ? "bg-midnight border-midnight-700 focus:border-gray-500" : "bg-white border-gray-300 focus:border-gray-500"}`}
-                type="text"
-                placeholder="Note (optional)..."
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleAdd()}
-              />
               <button
-                className="bg-violet-600 hover:bg-violet-700 transition-colors text-white w-full p-3 rounded-xl font-medium text-sm sm:text-base"
-                onClick={handleAdd}
+                type="button"
+                onClick={() => setDirection("owed")}
+                className={`px-3 sm:px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-1.5 ${direction === "owed" ? "bg-emerald-500 text-white shadow" : isDark ? "text-gray-300" : "text-gray-600"}`}
               >
-                Confirm
+                <span className="material-symbols-outlined text-base">
+                  arrow_downward
+                </span>
+                Owes Me
               </button>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+            </div>
+          </nav>
+
+          <input
+            className={`outline-none border-2 p-3 rounded-xl w-full text-sm sm:text-base transition-colors ${isDark ? "bg-midnight border-midnight-700 focus:border-gray-500" : "bg-white border-gray-300 focus:border-gray-500"}`}
+            type="text"
+            placeholder="Person's name..."
+            value={name}
+            autoFocus
+            onChange={(e) => setName(e.target.value)}
+            onKeyDown={(e) =>
+              e.key === "Enter" &&
+              e.currentTarget.nextElementSibling?.focus()
+            }
+          />
+          <input
+            className={`outline-none border-2 p-3 rounded-xl w-full text-sm sm:text-base transition-colors ${isDark ? "bg-midnight border-midnight-700 focus:border-gray-500" : "bg-white border-gray-300 focus:border-gray-500"}`}
+            type="number"
+            placeholder="Amount..."
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            onKeyDown={(e) =>
+              e.key === "Enter" &&
+              e.currentTarget.nextElementSibling?.focus()
+            }
+          />
+          <input
+            className={`outline-none border-2 p-3 rounded-xl w-full text-sm sm:text-base transition-colors ${isDark ? "bg-midnight border-midnight-700 focus:border-gray-500" : "bg-white border-gray-300 focus:border-gray-500"}`}
+            type="text"
+            placeholder="Note (optional)..."
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleAdd()}
+          />
+        </FullScreenForm>
+      )}
     </div>
   );
 }
